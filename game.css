@@ -1,22 +1,31 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+/* Generic Styles */
+*{
+    padding:0;
+    margin:0;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+
 body {
   padding: 10px;
 }
 
 h1, h2 {
   text-align: center;
+  font-weight:300;
 }
 #board{
   margin: 0 auto;
 }
 
 #board td{
-  border: 1px solid #ccc;
+  border: 1px solid #333;
   width: 16px;
   height: 16px;
 }
 
 td.alive {
-  background-color: #8CC8DD;
+  background-color: #09c;
 }
 
 td.dead {
@@ -26,4 +35,9 @@ td.dead {
 #control_panel {
   margin: 10px auto;
   text-align: center;
+}
+
+.btn {
+  border-radius: 0;
+  font-weight:300;
 }
