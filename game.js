@@ -422,7 +422,7 @@ function parseTemplateArray (templateArray) {
 //End loader code
 
 GameOfLife.prototype.shapeLoader = function(){
-	var arrayWithCoordinatesToActivate = parseTemplateArray(bomberTemplateArray);
+	var arrayWithCoordinatesToActivate = parseTemplateArray(heptapoleTemplateArray);
 	for (var i = 0; i < arrayWithCoordinatesToActivate.length; i++) {
 		var currentCell;
 		currentCoordinate = arrayWithCoordinatesToActivate[i];
