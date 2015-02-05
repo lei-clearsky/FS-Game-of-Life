@@ -99,7 +99,7 @@ GameOfLife.prototype.clearBoard = function(){
 }
 
 GameOfLife.prototype.resetRandom = function(){
-	var numberOfRandomCells = 2000;
+	var numberOfRandomCells = 100;
     for (var i = 0; i < numberOfRandomCells; i++) {
         randomX = Math.floor(Math.random() * this.width);
         randomY = Math.floor(Math.random() * this.height);
@@ -403,7 +403,7 @@ function parseTemplateArray (templateArray) {
 				
 				var currentCharacter = currentLine[j];
 				if (currentCharacter === "O") {
-					var id = (j + 50) + '-' + (i + 50);
+					var id = (j) + '-' + (i);
 					arrayWithCoordinatesToActivate.push(id);
 					//console.log(id);
 				}
@@ -438,7 +438,7 @@ GameOfLife.prototype.enableAutoPlay = function () {
 	var self = this;
 	this.autoPlay = setInterval(function(){
 		self.step();
-	}, 500);
+	}, 1000);
   return this.autoPlay;
 };
 
@@ -451,5 +451,5 @@ GameOfLife.prototype.stopPlay = function () {
   clearInterval(self.autoPlay);
 };
 
-var gol = new GameOfLife(200,200);
+var gol = new GameOfLife(40,40);
 gol.createAndShowBoard();
