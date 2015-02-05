@@ -2,6 +2,7 @@ function GameOfLife(width,height) {
   this.width = width;
   this.height = height;
   this.nextState = [];
+  this.autoPlay;
 }
 
 GameOfLife.prototype.createAndShowBoard = function () {
@@ -70,6 +71,7 @@ GameOfLife.prototype.setupBoardEvents = function() {
 	var stepButton = document.getElementById('step');
 	var clearButton = document.getElementById('clear');
 	var playButton = document.getElementById('play');
+  var stopButton = document.getElementById('stop'); // stop play button
 	var resetButton = document.getElementById('resetR');
 	var loadPatternButton = document.getElementById('loadPattern');
 	// setup buttons' click events
@@ -82,8 +84,10 @@ GameOfLife.prototype.setupBoardEvents = function() {
   stepButton.onclick = this.step.bind(this);
 	clearButton.onclick = this.clearBoard.bind(this);
 	playButton.onclick = this.enableAutoPlay.bind(this);
+  stopButton.onclick = this.stopPlay.bind(this); // add stop play button
 	resetButton.onclick = this.resetRandom.bind(this);
 	loadPatternButton.onclick = this.shapeLoader.bind(this);
+
 };
 
 GameOfLife.prototype.clearBoard = function(){
@@ -117,15 +121,15 @@ GameOfLife.prototype.forEach = function(func){
 }
 
 GameOfLife.prototype.countLives = function( x, y){
-		var liveCount = 0;
-		for (var i = x - 1; i <= x + 1; i ++){
-			for (var j = y - 1; j <= y +1; j ++){
-        var cellNeighborID = i + '-' + j;
-				var cellNeighbor = document.getElementById(cellNeighborID);
-				if (cellNeighbor && cellNeighbor.getAttribute('data-status') == 'alive')
-						liveCount ++;
-			}
+	var liveCount = 0;
+	for (var i = x - 1; i <= x + 1; i ++){
+		for (var j = y - 1; j <= y +1; j ++){
+      var cellNeighborID = i + '-' + j;
+			var cellNeighbor = document.getElementById(cellNeighborID);
+			if (cellNeighbor && cellNeighbor.getAttribute('data-status') == 'alive')
+					liveCount ++;
 		}
+	}
 	return liveCount;
 }
 
@@ -372,6 +376,7 @@ var heptapoleTemplateArray = [ '!Name: Heptapole',
  '' ];
 
 var bigshipTemplateArray = [ '!Name: 13-engine Cordership', '!Author: Dean Hickerson', '!The first c/12 diagonal spaceship to be found', '......................................................OOO', '.....................................................O..O', '....................................................O....O', '....................................................O..OOO', '....................................................O.....O', '.....................................................OOOOOOO', '...........................................................O', '...........................................................O', '.........................................................OO............OO', '.......................................................................OO', '', '', '', '', '', '', '...............................................................................OO', '...............................................................................OO', '....................................OOO', '...................................O...O', '..................................O....O', '..................................O..O.O...................................O', '..................................OO.O.O..................................O', '....................................OO.O..O................................O', '......................................OO..O............................................OO', '.......................................OOO.............................................OO', '............................OOO......................................O', '...........................O..O....................................O.O', '..........................O....O..................................OO', '..........................O..OOO', '..........................O.....O..............OOO.......O.O', '...........................OOOOOOO................OOO.....O', '.................................O................OOO..........................................OO', '.................................O.................O..................................O........OO', '...............................OO.....................................................O', '......................................................................................O', '.......................................................................................OO', '.......................................................................................OOO', '.......................................O...............................................OO', '.......................................O', '.......................................O', '........................................OO', '........................................OOO', '........................................OO............................................O', '..........OOO..........................................................................O', '.........O...O........................................................................O', '........O....O....................................................OO', '........O..O.O....................................................OO', '........OO.O.O.........................O...........................O', '..........OO.O..O.....................O.O', '............OO..O.....................O..O', '.............OOO', '..OOO..............................................................OOO.......O.O', '.O..O................................O..O.............................OOO.....O', 'O....O...............................OO.OOO...........................OOO', 'O..OOO.................................OO..O...........................O', 'O.....O...........................OO....O..O', '.OOOOOOO......................OO...O....O.O............OO', '.......O...........OOO.......O......O..................OOO', '.......O..............OOO.....O...OOOOO.....................O', '.....OO...............OOO......O...O........................O', '.......................O...........O..O.....................O', '....................................OO.......................OO', '.............................................................OOO', '....O........................................................OO', '...O.O', '..OO.O', '..OO', '...OOO', '....O.......................................................O', '.....O..O....................................................O', '..O......O..................................................O', '..O......O', '..O....OOO', '', '', '', '', '.........................................OOO.......O.O', '............................................OOO.....O', '.......OO...................................OOO', '.......OO....................................O', '', '', '', '..................................O', '..................................O', '..................................O', '...............OO..................OO', '...............OO..................OOO', '...................................OO', '', '', '', '', '..................................O', '.......................OO..........O', '.......................OO.........O', '' ];
+
 function formatTemplateArray (templateArray) {
 	var newArray = [];
 	for (var i = 0; i < templateArray.length; i++) {
@@ -431,9 +436,19 @@ GameOfLife.prototype.enableAutoPlay = function () {
   // Start Auto-Play by running the 'step' function
   // automatically repeatedly every fixed time interval
 	var self = this;
-	setInterval(function(){
+	this.autoPlay = setInterval(function(){
 		self.step();
 	}, 500);
+  return this.autoPlay;
+};
+
+// stop Auto-Play by removing setInterval events
+GameOfLife.prototype.stopPlay = function () {
+  // Start Auto-Play by running the 'step' function
+  // automatically repeatedly every fixed time interval
+  var self = this;
+  console.log('stop');
+  clearInterval(self.autoPlay);
 };
 
 var gol = new GameOfLife(200,200);
