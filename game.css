@@ -20,8 +20,8 @@ h1, h2 {
 
 #board td{
   border: 1px solid #333;
-  width: 16px;
-  height: 16px;
+  width: 5px;
+  height: 5px;
 }
 
 td.alive {

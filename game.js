@@ -403,7 +403,7 @@ function parseTemplateArray (templateArray) {
 				
 				var currentCharacter = currentLine[j];
 				if (currentCharacter === "O") {
-					var id = (j) + '-' + (i);
+					var id = (j + 30) + '-' + (i + 30);
 					arrayWithCoordinatesToActivate.push(id);
 					//console.log(id);
 				}
@@ -422,7 +422,7 @@ function parseTemplateArray (templateArray) {
 //End loader code
 
 GameOfLife.prototype.shapeLoader = function(){
-	var arrayWithCoordinatesToActivate = parseTemplateArray(heptapoleTemplateArray);
+	var arrayWithCoordinatesToActivate = parseTemplateArray(spaceshipTemplateArray);
 	for (var i = 0; i < arrayWithCoordinatesToActivate.length; i++) {
 		var currentCell;
 		currentCoordinate = arrayWithCoordinatesToActivate[i];
@@ -438,7 +438,7 @@ GameOfLife.prototype.enableAutoPlay = function () {
 	var self = this;
 	this.autoPlay = setInterval(function(){
 		self.step();
-	}, 1000);
+	}, 50);
   return this.autoPlay;
 };
 
@@ -451,5 +451,5 @@ GameOfLife.prototype.stopPlay = function () {
   clearInterval(self.autoPlay);
 };
 
-var gol = new GameOfLife(40,40);
+var gol = new GameOfLife(150,150);
 gol.createAndShowBoard();
