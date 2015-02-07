@@ -75,18 +75,13 @@ GameOfLife.prototype.setupBoardEvents = function() {
 	var resetButton = document.getElementById('resetR');
 	var loadPatternButton = document.getElementById('loadPattern');
 	// setup buttons' click events
-  /* 
-	stepButton.onclick = this.step;
-	clearButton.onclick = this.clearBoard;
-	playButton.onclick = this.enableAutoPlay;
-	resetButton.onclick = this.resetRandom;
-	*/
   stepButton.onclick = this.step.bind(this);
 	clearButton.onclick = this.clearBoard.bind(this);
 	playButton.onclick = this.enableAutoPlay.bind(this);
   stopButton.onclick = this.stopPlay.bind(this); // add stop play button
 	resetButton.onclick = this.resetRandom.bind(this);
-	loadPatternButton.onclick = this.shapeLoader.bind(this);
+	//loadPatternButton.onclick = this.shapeLoader.bind(this);
+  loadPatternButton.onclick = this.testAjax.bind(this);
 
 };
 
@@ -192,52 +187,6 @@ GameOfLife.prototype.updateState = function(){
     }
   }
 }
-/*
-GameOfLife.prototype.step = function () {
-  // Here is where you want to loop through all the cells
-  // on the board and determine, based on it's neighbors,
-  // whether the cell should be dead or alive in the next
-  // evolution of the game
-	for (var y = 0; y < this.height; y ++){
-		for (var x = 0; x < this.width; x ++){
-			var cellXY = document.getElementById(x + '-' + y);
-			if (cellXY.getAttribute('data-status') == 'alive'){
-				var liveCount = 0;
-				for (var i = x - 1; i <= x + 1; i ++){
-						for (var j = y - 1; j <= y +1; j ++){
-							var cellNeighbor = document.getElementById(i + '-' + j);
-							if (cellNeighbor){	
-								if (cellNeighbor.getAttribute('data-status') == 'alive')
-									liveCount ++;
-							}
-						}
-				}
-				if (liveCount < 3 || liveCount > 4){
-					cellXY.setAttribute('data-status', 'dead');
-					cellXY.className = 'dead';
-				}
-			}
-			if (cellXY.getAttribute('data-status') == 'dead'){
-				var liveCount = 0;
-				for (var i = x - 1; i <= x + 1; i ++){
-						for (var j = y - 1; j <= y +1; j ++){
-							var cellNeighbor = document.getElementById(i + '-' + j);
-							if(cellNeighbor){
-								if (cellNeighbor.getAttribute('data-status') == 'alive')
-									liveCount ++;
-							}
-						}
-				}
-				if (liveCount == 3){
-					cellXY.setAttribute('data-status', 'alive');
-					cellXY.className = 'alive';
-				}
-			}
-		}
-	}  
-};
-*/
-
 
 var bomberTemplateArray = [ '!Name: B-52 bomber',
  '!Author: Noam Elkies',
@@ -421,8 +370,8 @@ function parseTemplateArray (templateArray) {
 // parseTemplateArray(bomberTemplateArray);
 //End loader code
 
-GameOfLife.prototype.shapeLoader = function(){
-	var arrayWithCoordinatesToActivate = parseTemplateArray(spaceshipTemplateArray);
+GameOfLife.prototype.shapeLoader = function(data){
+	var arrayWithCoordinatesToActivate = parseTemplateArray(data);//spaceshipTemplateArray
 	for (var i = 0; i < arrayWithCoordinatesToActivate.length; i++) {
 		var currentCell;
 		currentCoordinate = arrayWithCoordinatesToActivate[i];
@@ -450,6 +399,28 @@ GameOfLife.prototype.stopPlay = function () {
   console.log('stop');
   clearInterval(self.autoPlay);
 };
+
+// ajax test
+GameOfLife.prototype.testAjax = function(){
+  console.log('test1');
+  var self = this;
+  var url = 'http://0.0.0.0:3000/bigship';
+  $.ajax({
+    dataType:'json',
+    url: url,
+    //dataType: 'jsonp', 
+    success: function(data) {
+      console.log('test2');
+      // var jsonData = $.parseJSON(data);
+      self.shapeLoader(data);
+    },
+    error: function(data){
+      console.log('test3');
+      console.log(data);
+    }
+  });
+}
+
 
 var gol = new GameOfLife(150,150);
 gol.createAndShowBoard();
