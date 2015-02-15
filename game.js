@@ -2,7 +2,7 @@ function GameOfLife(width,height) {
   this.width = width;
   this.height = height;
   this.nextState = [];
-  this.autoPlay = null;
+  // this.autoPlay = null;
 }
 
 GameOfLife.prototype.createAndShowBoard = function () {
@@ -93,49 +93,116 @@ GameOfLife.prototype.forEach = function(func){
 	}
 }
 
-GameOfLife.prototype.step = function () {
-
-  this.forEach(function(cell, x, y){
-
-    var aliveNeighbors = 0, neigh_id, ncell;
-
-    for (var i = -1; i <=1; i ++) {
-      for (var j = -1; j <=1; j ++) {
-        neigh_id = (x+i) + "-" + (y+j);
-        if(neigh_id !== cell.id) {
-          ncell = document.getElementById(neigh_id);
-          if (ncell && ncell.getAttribute('data-status') === "alive") {
-            aliveNeighbors ++;
-          }
+GameOfLife.prototype.step = function (event) {
+//  event.toElement.style.background = "blue";
+    this.forEach(function(cell, x, y) {
+        var aliveNeighbors = 0, neigh_id, neighYX_id, ncell, ncellYX, that;
+        for (var i = -1; i <= 1; i++) {
+            for (var j = -1; j <= 1; j++) {
+                // console.log(that.width, that.height);
+                if (y === 0 && x === 0) {
+                    neighYX_id = (150 + i) + '-' + (150 + j);
+                } else if (y === 0) {
+                    neighYX_id = (150 - x - 1 + i) + '-' + (150 - y + j);
+                } else if (x === 0) {
+                    neighYX_id = (150 - x + i) + '-' + (150 - y - 1 + j);
+                } else if (y === 150 - 1) {
+                    neighYX_id = (150 - x - 1 + i) + '-' + (150 - y - 2 + j);
+                } else if (x === 150 - 1) {
+                    neighYX_id = (150 - x - 2 + i) + '-' + (150 - y - 1 + j);
+                } else {
+                    neighYX_id = 'undefined';
+                }
+                if (y === 0 || x === 0 || y === 150 - 1 || x === 150 - 1) {
+                    neighYX_id = (150 - x - 1 + i) + '-' + (150 - y + j);
+                    if (neighYX_id !== cell.id) {
+                        ncellYX = document.getElementById(neighYX_id);
+                        if (ncellYX && ncellYX.getAttribute('data-status') === 'alive') {
+                            aliveNeighbors++;
+                        }
+                    }
+                }
+                neigh_id = (x + i) + '-' + (y + j);
+                if (neigh_id !== cell.id) {
+                    ncell = document.getElementById(neigh_id);
+                    if (ncell && ncell.getAttribute('data-status') === 'alive') {
+                        aliveNeighbors++;
+                    }
+                }
+            }
         }
-      }
-    }
-
-    cell.setAttribute('data-neighbors', aliveNeighbors);
-
-  });
-
-	var determineNextState = function (cell) {
-    var currState = cell.getAttribute('data-status');
-    var numNeighbors = parseInt(cell.getAttribute('data-neighbors'));
-    var nextState = currState;
-
-    if (currState === "alive" && (numNeighbors < 2 || numNeighbors > 3)) {
-      nextState = "dead";
-    } else if (currState === "dead" && numNeighbors === 3) {
-      nextState = "alive";
-    }
-    return nextState;
-  };
-
-  this.forEach(function(cell, x, y) {
-    var nextState = determineNextState(cell);
-    cell.setAttribute('data-status', nextState);
-    cell.setAttribute('data-neighbors', -1);
-    cell.className = nextState;
-  });
-
+        cell.setAttribute('data-neighbors', aliveNeighbors);
+    })
+    var determineNextState = function(cell) {
+        var currState = cell.getAttribute('data-status');
+        var numNeighbors = parseInt(cell.getAttribute('data-neighbors'));
+        var nextState = currState;
+        if (currState === 'alive' && (numNeighbors < 2 || numNeighbors > 3)) {
+            nextState = 'dead';
+        } else if (currState === 'dead' && numNeighbors === 3) {
+            nextState = 'alive';
+        }
+        return nextState;
+    };
+    this.forEach(function(cell, x, y) {
+        var nextState = determineNextState(cell);
+        cell.setAttribute('data-status', nextState);
+        cell.setAttribute('data-neighbors', -1);
+        cell.className = nextState;
+    });
 };
+
+// GameOfLife.prototype.step = function () {
+//   var boardWidthLen = this.width - 1;
+//   var boardHeightLen = this.height - 1;
+
+//   this.forEach(function(cell, x, y){
+
+//     var cellXY = cell.getAttribute('id').split('-');
+//     var cellX = cellXY[0];
+//     var cellY = cellXY[1];
+
+//     var aliveNeighbors = 0, neigh_id, ncell;
+
+//     for (var i = -1; i <=1; i ++) {
+//       for (var j = -1; j <=1; j ++) {
+          
+//         neigh_id = (x+i) + "-" + (y+j);
+//         if(neigh_id !== cell.id) {
+//           ncell = document.getElementById(neigh_id);
+
+//           if (ncell && ncell.getAttribute('data-status') === "alive") {
+//             aliveNeighbors ++;
+//           } 
+//         }
+//       }
+//     }
+
+//     cell.setAttribute('data-neighbors', aliveNeighbors);
+
+//   });
+
+// 	var determineNextState = function (cell) {
+//     var currState = cell.getAttribute('data-status');
+//     var numNeighbors = parseInt(cell.getAttribute('data-neighbors'));
+//     var nextState = currState;
+
+//     if (currState === "alive" && (numNeighbors < 2 || numNeighbors > 3)) {
+//       nextState = "dead";
+//     } else if (currState === "dead" && numNeighbors === 3) {
+//       nextState = "alive";
+//     }
+//     return nextState;
+//   };
+
+//   this.forEach(function(cell, x, y) {
+//     var nextState = determineNextState(cell);
+//     cell.setAttribute('data-status', nextState);
+//     cell.setAttribute('data-neighbors', -1);
+//     cell.className = nextState;
+//   });
+
+// };
 
 
 var bomberTemplateArray = [ '!Name: B-52 bomber',
@@ -302,7 +369,7 @@ function parseTemplateArray (templateArray) {
 				
 				var currentCharacter = currentLine[j];
 				if (currentCharacter === "O") {
-					var id = (j + 30) + '-' + (i + 30);
+					var id = (j + 5) + '-' + (i + 5);
 					arrayWithCoordinatesToActivate.push(id);
 				}
 			}
@@ -331,7 +398,7 @@ GameOfLife.prototype.enableAutoPlay = function () {
   if (!this.autoPlay) {
     self.autoPlay = window.setInterval(function () {
       self.step();
-    }, 10);
+    }, 50);
   } else {
     window.clearInterval(this.autoPlay);
     this.autoPlay = null;
